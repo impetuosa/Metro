@@ -57,7 +57,7 @@ MTRMetrics >> initialize [
 MTRMetrics >> newEntryForType: anObjectType [
 	| metric type |
 	type := self class environment
-		at: ('Jin{1}Metric' format: {anObjectType}) asSymbol.
+		at: ('MTR{1}Metric' format: {anObjectType}) asSymbol.
 	metric := type new.
 	metric register: #AccesType value: anObjectType.
 	(children at: anObjectType ifAbsentPut: [ OrderedCollection new ])
