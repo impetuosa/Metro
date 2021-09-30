@@ -6,12 +6,10 @@ Class {
 
 { #category : #baselines }
 BaselineOfMetro >> baseline: spec [
+
 	<baseline>
 	spec
-		baseline: 'Jindao'
-		with: [ spec repository: 'github://impetuosa/jindao' ].
-	spec
-		baseline: 'VBParser'
-		with: [ spec repository: 'github://impetuosa/VBParser' ].
-	spec package: 'Metro' with: [ spec requires: #(Jindao VBParser) ]
+		baseline: 'Alce'
+		with: [ spec repository: 'github://impetuosa/Alce' ].
+	spec package: 'Metro' with: [ spec requires: #( Alce ) ]
 ]
