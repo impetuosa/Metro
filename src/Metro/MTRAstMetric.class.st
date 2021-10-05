@@ -1,13 +1,14 @@
 Class {
 	#name : #MTRAstMetric,
 	#superclass : #MTRMetrics,
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #'instance creation' }
 MTRAstMetric >> branchings [
+
 	<cvs: #Branchings at: 15>
-	^ (self children collect: [ :c | c valueOrZero: #Branching ]) sum
+	^ self valueOrZero: #Branching
 ]
 
 { #category : #'instance creation' }
@@ -17,8 +18,9 @@ MTRAstMetric >> functions [
 
 { #category : #'instance creation' }
 MTRAstMetric >> goSubs [
+
 	<cvs: #GoSub at: 12>
-	^ (self children collect: [ :c | c valueOrZero: #GoSub ]) sum
+	^ self valueOrZero: #GoSub
 ]
 
 { #category : #'instance creation' }
@@ -28,8 +30,9 @@ MTRAstMetric >> hadErrorOnCalculation [
 
 { #category : #'instance creation' }
 MTRAstMetric >> loops [
+
 	<cvs: #Loops at: 15>
-	^ (self children collect: [ :c | c valueOrZero: #Loop ]) sum
+	^ self valueOrZero: #Loop
 ]
 
 { #category : #'instance creation' }
@@ -54,14 +57,16 @@ MTRAstMetric >> newSubMetrics [
 
 { #category : #'instance creation' }
 MTRAstMetric >> onErrorGoTos [
+
 	<cvs: #ErrorGoTo at: 13>
-	^ (self children collect: [ :c | c valueOrZero: #OnErrorGoTo ]) sum
+	^ self valueOrZero: #OnErrorGoTo
 ]
 
 { #category : #'instance creation' }
 MTRAstMetric >> onErrorResumeNext [
+
 	<cvs: #ErrorResumeNext at: 14>
-	^ (self children collect: [ :c | c valueOrZero: #OnErrorResumeNext ]) sum
+	^ self valueOrZero: #OnErrorResumeNext
 ]
 
 { #category : #'instance creation' }
@@ -105,20 +110,23 @@ MTRAstMetric >> propertyAccessors [
 
 { #category : #'instance creation' }
 MTRAstMetric >> resumeLabels [
+
 	<cvs: #ResumeLabel at: 16>
-	^ (self children collect: [ :c | c valueOrZero: #ResumeLabel ]) sum
+	^ self valueOrZero: #ResumeLabel
 ]
 
 { #category : #'instance creation' }
 MTRAstMetric >> resumeNext [
+
 	<cvs: #ResumeNext at: 17>
-	^ (self children collect: [ :c | c valueOrZero: #ResumeNext ]) sum
+	^ self valueOrZero: #ResumeNext
 ]
 
 { #category : #'instance creation' }
 MTRAstMetric >> resumes [
+
 	<cvs: #ResumeEmpty at: 15>
-	^ (self children collect: [ :c | c valueOrZero: #ResumeEmpty ]) sum
+	^ self valueOrZero: #ResumeEmpty
 ]
 
 { #category : #'instance creation' }

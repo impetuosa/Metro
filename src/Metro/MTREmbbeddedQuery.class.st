@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'sql'
 	],
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #'as yet unclassified' }

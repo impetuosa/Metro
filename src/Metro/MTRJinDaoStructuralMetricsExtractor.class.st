@@ -1,5 +1,5 @@
 Class {
-	#name : #MTRStructuralMetricsExtractor,
+	#name : #MTRJinDaoStructuralMetricsExtractor,
 	#superclass : #JinStackVisitor,
 	#classInstVars : [
 		'generalMetrics',
@@ -7,11 +7,11 @@ Class {
 		'proj',
 		'metrics'
 	],
-	#category : #Metro
+	#category : #'Metro-Extractor-JinDao'
 }
 
 { #category : #'as yet unclassified' }
-MTRStructuralMetricsExtractor class >> egrcMetrics [
+MTRJinDaoStructuralMetricsExtractor class >> egrcMetrics [
 	| projects |
 	projects := 'C:\WMagnus' asFileReference allEntries
 		select: [ :s | 
@@ -28,7 +28,7 @@ MTRStructuralMetricsExtractor class >> egrcMetrics [
 		do: [ :p | 
 			generalMetrics
 				at: p asFileReference fullName
-				ifAbsent: [ extractor := MTRStructuralMetricsExtractor new.
+				ifAbsent: [ extractor := MTRJinDaoStructuralMetricsExtractor new.
 					proj := JinAccessApplication default open: p asFileReference.
 					metrics := extractor metricsFor: proj.
 					generalMetrics
@@ -38,7 +38,7 @@ MTRStructuralMetricsExtractor class >> egrcMetrics [
 ]
 
 { #category : #'as yet unclassified' }
-MTRStructuralMetricsExtractor class >> exportCVS [
+MTRJinDaoStructuralMetricsExtractor class >> exportCVS [
 	generalMetrics
 		keysAndValuesDo: [ :k :v | 
 			| base |
@@ -53,23 +53,23 @@ MTRStructuralMetricsExtractor class >> exportCVS [
 ]
 
 { #category : #'as yet unclassified' }
-MTRStructuralMetricsExtractor class >> generalMetrics [
+MTRJinDaoStructuralMetricsExtractor class >> generalMetrics [
 	^ generalMetrics
 ]
 
 { #category : #'as yet unclassified' }
-MTRStructuralMetricsExtractor class >> load: aFileRef [
+MTRJinDaoStructuralMetricsExtractor class >> load: aFileRef [
 	generalMetrics := STON fromStream: aFileRef readStream
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> initialize [ 
+MTRJinDaoStructuralMetricsExtractor >> initialize [ 
 	super initialize. 
 	stack push: MTRStructuralMetric new.
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> loadMetricsFromFormOrReport: aForm [
+MTRJinDaoStructuralMetricsExtractor >> loadMetricsFromFormOrReport: aForm [
 	| dataSource |
 	self metrics register: #name value: aForm name.
 	self metrics register: #type value: aForm formType.
@@ -85,12 +85,12 @@ MTRStructuralMetricsExtractor >> loadMetricsFromFormOrReport: aForm [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> metrics [
+MTRJinDaoStructuralMetricsExtractor >> metrics [
 	^ stack top
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> metricsFor: aProject [
+MTRJinDaoStructuralMetricsExtractor >> metricsFor: aProject [
 	aProject acceptVisitor: self.
 	self
 		assert: stack size = 1
@@ -99,17 +99,17 @@ MTRStructuralMetricsExtractor >> metricsFor: aProject [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> sourceCodeMetrixExtractor [
-	^ MTRASTMetricsExtractor new
+MTRJinDaoStructuralMetricsExtractor >> sourceCodeMetrixExtractor [
+	^ MTRASTJinDaoMetricsExtractor new
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitAccessProperty: aProperty [
+MTRJinDaoStructuralMetricsExtractor >> visitAccessProperty: aProperty [
 	self metrics incrementCounterFor: #Properties
 ]
 
 { #category : #'as yet unclassified' }
-MTRStructuralMetricsExtractor >> visitCustomControl: aControl [
+MTRJinDaoStructuralMetricsExtractor >> visitCustomControl: aControl [
 	" 
 	Some controls arrive here by accident...
 	JinControl delegate bydefault to visitCustomControl:. Probably is a bad decision . Should change it 
@@ -127,7 +127,7 @@ MTRStructuralMetricsExtractor >> visitCustomControl: aControl [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitForm: aForm [
+MTRJinDaoStructuralMetricsExtractor >> visitForm: aForm [
 	self
 		push: self metrics newFormMetric
 		during: [ 
@@ -138,23 +138,23 @@ MTRStructuralMetricsExtractor >> visitForm: aForm [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitFormControl: aControl [
+MTRJinDaoStructuralMetricsExtractor >> visitFormControl: aControl [
 	self metrics incrementCounterFor: #Controls
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitIndex: aJinIndex [
+MTRJinDaoStructuralMetricsExtractor >> visitIndex: aJinIndex [
 	"Should we include this?"
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitMacro: anObject [
+MTRJinDaoStructuralMetricsExtractor >> visitMacro: anObject [
 
 	self metrics newMacroMetric register:#name value: anObject name 
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitModule: anObject [
+MTRJinDaoStructuralMetricsExtractor >> visitModule: anObject [
 	| mtrx |
 	mtrx := anObject isClassModule
 		ifTrue: [ self metrics newClassModuleMetric ]
@@ -165,7 +165,7 @@ MTRStructuralMetricsExtractor >> visitModule: anObject [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitProject: aJinAccessProject [
+MTRJinDaoStructuralMetricsExtractor >> visitProject: aJinAccessProject [
 	self visitCollection: aJinAccessProject references.
 	self visitCollection: aJinAccessProject tables.
 	self visitCollection: aJinAccessProject queries.
@@ -174,7 +174,7 @@ MTRStructuralMetricsExtractor >> visitProject: aJinAccessProject [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitQuery: anObject [
+MTRJinDaoStructuralMetricsExtractor >> visitQuery: anObject [
 	self
 		push: self metrics newQueryMetric
 		during: [ 
@@ -189,7 +189,7 @@ MTRStructuralMetricsExtractor >> visitQuery: anObject [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitReference: aRef [
+MTRJinDaoStructuralMetricsExtractor >> visitReference: aRef [
 	| metric |
 	metric := self metrics newReferenceMetric.
 	metric register: #BuiltIn value: aRef isBuiltIn.
@@ -199,7 +199,7 @@ MTRStructuralMetricsExtractor >> visitReference: aRef [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitReport: aReport [
+MTRJinDaoStructuralMetricsExtractor >> visitReport: aReport [
 	self
 		push: self metrics newReportMetric
 		during: [ 
@@ -209,19 +209,19 @@ MTRStructuralMetricsExtractor >> visitReport: aReport [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitSourceCode: aSourceCode [
+MTRJinDaoStructuralMetricsExtractor >> visitSourceCode: aSourceCode [
 	self metrics register: #LOC value: aSourceCode amountOfLines.
 	self metrics source: aSourceCode contents
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitSubForm: aSubform [
+MTRJinDaoStructuralMetricsExtractor >> visitSubForm: aSubform [
 	self metrics registerDependancy: aSubform name kind: #Form.
 	super visitSubForm: aSubform
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitTable: anObject [
+MTRJinDaoStructuralMetricsExtractor >> visitTable: anObject [
 	self
 		push: self metrics newTableMetric
 		during: [ 
@@ -234,6 +234,6 @@ MTRStructuralMetricsExtractor >> visitTable: anObject [
 ]
 
 { #category : #'visit-first-objects' }
-MTRStructuralMetricsExtractor >> visitTableRelation: aJinTableRelation [
+MTRJinDaoStructuralMetricsExtractor >> visitTableRelation: aJinTableRelation [
 	"Should we include this?"
 ]

@@ -1,7 +1,7 @@
 Class {
 	#name : #MTRFormMetric,
 	#superclass : #MTRSourcedEntity,
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #properties }
@@ -57,12 +57,6 @@ MTRFormMetric >> kind [
 MTRFormMetric >> loc [
 	<cvs: #LOC at: 2>
 	^ self companionModule ifNil: [ 0 ] ifNotNil: [ :m | m LOC ]
-]
-
-{ #category : #properties }
-MTRFormMetric >> name [
-	<cvs: #name at: 1>
-	^ properties at:#name ifAbsent: nil 
 ]
 
 { #category : #properties }

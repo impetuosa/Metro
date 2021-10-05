@@ -1,7 +1,7 @@
 Class {
 	#name : #MTRQueryMetric,
 	#superclass : #MTRStructuralMetric,
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #properties }
@@ -11,17 +11,18 @@ MTRQueryMetric >> fields [
 ]
 
 { #category : #properties }
-MTRQueryMetric >> name [
-	<cvs: #name at: 1>
-	^ properties at: #name ifAbsent: nil
+MTRQueryMetric >> members [
+
+	<cvs: #members at: 2>
+	^ properties at: #Members
 ]
 
 { #category : #properties }
 MTRQueryMetric >> printOn: aStream [
 	aStream
 		nextPutAll:
-			('Query>> fields:{1} name:{2}'
+			('Query>> name:{1} Members:{2}'
 				format:
-					{self fields asString.
-					self name})
+					{self name .
+					self members})
 ]

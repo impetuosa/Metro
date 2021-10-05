@@ -7,7 +7,7 @@ Class {
 	#classInstVars : [
 		'pool'
 	],
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #'instance creation' }

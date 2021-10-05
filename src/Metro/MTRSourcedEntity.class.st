@@ -5,7 +5,7 @@ Class {
 		'source',
 		'sourceMetrics'
 	],
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #accessing }
@@ -20,18 +20,24 @@ MTRSourcedEntity >> allDependencies [
 
 { #category : #accessing }
 MTRSourcedEntity >> ast [
+
 	| semaphore result |
+	ast ifNotNil: [ ^ ast ].
+
 	semaphore := Semaphore new.
-	[ [ result := (self class environment at: #VBParser) parse: source ]
+	[ 
+	[ result := (self class environment at: #VBParser) parse: source ]
 		on: Error
 		do: [ :e | result := e ].
 	semaphore signal ] forkAt: Processor userBackgroundPriority.
-	^ semaphore
+	semaphore
 		wait: 5 minute
-		onCompletion: [ result isError
-				ifTrue: [ ^ result signal ].
-			result ]
-		onTimeout: [ TimedOut new signal: 'TimeOut' ]
+		onCompletion: [ 
+			result isError
+				ifTrue: [ ast := nil ]
+				ifFalse: [ ast := result ] ]
+		onTimeout: [ TimedOut new signal: 'TimeOut' ].
+	^ ast
 ]
 
 { #category : #accessing }
@@ -78,6 +84,13 @@ MTRSourcedEntity >> functions [
 ]
 
 { #category : #'as yet unclassified' }
+MTRSourcedEntity >> grammaticalConsolidatedMetrics [
+
+	^ (self children collect: [ :c | c grammaticalConsolidatedMetrics ])
+		  sum
+]
+
+{ #category : #'as yet unclassified' }
 MTRSourcedEntity >> hadSyntaxErrorOnCalculation [
 	sourceMetrics ifNil: [ ^ false ].
 	sourceMetrics hadErrorOnCalculation ifFalse: [ ^ false ].
@@ -98,6 +111,26 @@ MTRSourcedEntity >> loops [
 	sourceMetrics hadErrorOnCalculation
 		ifTrue: [ ^ 'Unknown' ].
 	^ sourceMetrics loops
+]
+
+{ #category : #accessing }
+MTRSourcedEntity >> newFunctionMetrics [
+	^ self newEntryForType: #Function
+]
+
+{ #category : #accessing }
+MTRSourcedEntity >> newPropertyAccessorMetrics [
+	^ self newEntryForType: #PropertyAccessor
+]
+
+{ #category : #'as yet unclassified' }
+MTRSourcedEntity >> newPropertyMetrics [
+	^ self newEntryForType: #Property
+]
+
+{ #category : #accessing }
+MTRSourcedEntity >> newSubMetrics [
+	^ self newEntryForType: #SubProcedure
 ]
 
 { #category : #accessing }
@@ -185,7 +218,7 @@ MTRSourcedEntity >> source: aSource [
 
 { #category : #accessing }
 MTRSourcedEntity >> sourceCodeMetrixExtractor [
-	^ MTRASTMetricsExtractor new
+	^ MTRASTJinDaoMetricsExtractor new
 ]
 
 { #category : #accessing }

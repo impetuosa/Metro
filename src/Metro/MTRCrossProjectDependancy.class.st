@@ -5,7 +5,7 @@ Class {
 		'type',
 		'name'
 	],
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #'as yet unclassified' }

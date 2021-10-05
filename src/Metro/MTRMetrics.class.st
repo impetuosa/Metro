@@ -2,11 +2,12 @@ Class {
 	#name : #MTRMetrics,
 	#superclass : #Object,
 	#instVars : [
+		'model',
 		'children',
 		'properties',
 		'dependancies'
 	],
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #consolidation }
@@ -16,6 +17,13 @@ MTRMetrics >> allDependencies [
 			((self dependencies reject: #isArray)
 				flatCollect: [ :d | d allDependencies ])
 		, (self children flatCollect: #allDependencies)
+]
+
+{ #category : #'as yet unclassified' }
+MTRMetrics >> allSourcedEntities [
+
+	^ (self children select: [ :a | a isKindOf: MTRSourcedEntity ])
+	  , (self children flatCollect: [ :a | a allSourcedEntities ])
 ]
 
 { #category : #'as yet unclassified' }
@@ -51,6 +59,28 @@ MTRMetrics >> initialize [
 	children := Dictionary new.
 	properties := Dictionary new.
 	dependancies := Set new
+]
+
+{ #category : #accessing }
+MTRMetrics >> model [
+	^ model
+]
+
+{ #category : #accessing }
+MTRMetrics >> model: anAlcixClass [ 
+	model := anAlcixClass
+]
+
+{ #category : #accessing }
+MTRMetrics >> name [
+	<cvs: #name at: 1>
+	^ properties at: #Name ifAbsent: nil
+]
+
+{ #category : #accessing }
+MTRMetrics >> name: aString [
+
+	self register: #Name value: aString
 ]
 
 { #category : #initialization }

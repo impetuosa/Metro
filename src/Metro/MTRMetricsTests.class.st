@@ -5,13 +5,13 @@ Class {
 		'extractor',
 		'metrics'
 	],
-	#category : #Metro
+	#category : #'Metro-Tests'
 }
 
 { #category : #running }
 MTRMetricsTests >> setUp [
 	super setUp.
-	extractor := MTRStructuralMetricsExtractor new.
+	extractor := MTRJinDaoStructuralMetricsExtractor new.
 	metrics := extractor metricsFor: project
 ]
 

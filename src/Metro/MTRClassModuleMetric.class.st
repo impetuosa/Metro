@@ -1,7 +1,7 @@
 Class {
 	#name : #MTRClassModuleMetric,
 	#superclass : #MTRSourcedEntity,
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #properties }
@@ -18,12 +18,6 @@ MTRClassModuleMetric >> kind [
 MTRClassModuleMetric >> loc [
 	<cvs: #'LOC' at: 2>
 	^ self LOC
-]
-
-{ #category : #properties }
-MTRClassModuleMetric >> name [
-	<cvs: #name at: 1>
-	^ properties at: #name ifAbsent: nil
 ]
 
 { #category : #properties }

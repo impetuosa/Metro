@@ -1,92 +1,92 @@
 Class {
-	#name : #MTRASTMetricsExtractor,
+	#name : #MTRASTJinDaoMetricsExtractor,
 	#superclass : #VBProgramNodeVisitor,
 	#instVars : [
 		'stack'
 	],
-	#category : #Metro
+	#category : #'Metro-Extractor-VBParser'
 }
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> initialize [
+MTRASTJinDaoMetricsExtractor >> initialize [
 	super initialize.
 	stack := Stack new.
 	stack push: MTRAstMetric new
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> metrics [
+MTRASTJinDaoMetricsExtractor >> metrics [
 	^ stack top
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> metricsFor: anAST [
+MTRASTJinDaoMetricsExtractor >> metricsFor: anAST [
 	self metrics register: #LOC value: anAST source lines size.
 	anAST acceptVisitor: self.
 	^ self metrics
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> push: aValue during: aBlock [
+MTRASTJinDaoMetricsExtractor >> push: aValue during: aBlock [
 	stack push: aValue.
 	aBlock
 		ensure: [ stack pop ]
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitAsTypeAndNew: aTypeAndNew [
+MTRASTJinDaoMetricsExtractor >> visitAsTypeAndNew: aTypeAndNew [
 	self metrics
 		registerDependancy: (aTypeAndNew source copyReplaceAll: 'As ' with: '')
 		kind: #TypeAndNew
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitAssignementOrEquals: anObject [
+MTRASTJinDaoMetricsExtractor >> visitAssignementOrEquals: anObject [
 	self metrics incrementCounterFor: #AssignmentOrEquality
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitConcatenationOperation: aConcatenationOperation [ 
+MTRASTJinDaoMetricsExtractor >> visitConcatenationOperation: aConcatenationOperation [ 
 	self metrics incrementCounterFor: #Concatenation.
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitDoUntilTrue: anObject [
+MTRASTJinDaoMetricsExtractor >> visitDoUntilTrue: anObject [
 	self metrics incrementCounterFor: #Loop
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitDoWhileTrue: anObject [
+MTRASTJinDaoMetricsExtractor >> visitDoWhileTrue: anObject [
 	self metrics incrementCounterFor: #Loop
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitExit: anObject [
+MTRASTJinDaoMetricsExtractor >> visitExit: anObject [
 	self metrics incrementCounterFor: #Exit
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitExplicitAssignement: anObject [
+MTRASTJinDaoMetricsExtractor >> visitExplicitAssignement: anObject [
 	self metrics incrementCounterFor: #ExplicitAssignment
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitForEach:  anObject [
+MTRASTJinDaoMetricsExtractor >> visitForEach:  anObject [
 	self metrics incrementCounterFor: #Loop
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitForNext:  anObject [
+MTRASTJinDaoMetricsExtractor >> visitForNext:  anObject [
 	self metrics incrementCounterFor: #Loop
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitForStepNext:  anObject [
+MTRASTJinDaoMetricsExtractor >> visitForStepNext:  anObject [
 	self metrics incrementCounterFor: #Loop
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitFunctionDefinition: aFunction [
+MTRASTJinDaoMetricsExtractor >> visitFunctionDefinition: aFunction [
 	self
 		push: self metrics newFunctionMetrics
 		during: [ 
@@ -96,27 +96,27 @@ MTRASTMetricsExtractor >> visitFunctionDefinition: aFunction [
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitGoSub: anObject [
+MTRASTJinDaoMetricsExtractor >> visitGoSub: anObject [
 	self metrics incrementCounterFor: #GoSub
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitIfThenColon: anObject [
+MTRASTJinDaoMetricsExtractor >> visitIfThenColon: anObject [
 	self metrics incrementCounterFor: #Branching
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitIfThenElse: anObject [
+MTRASTJinDaoMetricsExtractor >> visitIfThenElse: anObject [
 	self metrics incrementCounterFor: #Branching
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitIfThenElseIfElse: anObject [
+MTRASTJinDaoMetricsExtractor >> visitIfThenElseIfElse: anObject [
 	self metrics incrementCounterFor: #Branching
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitModuleProperty: aProperty [
+MTRASTJinDaoMetricsExtractor >> visitModuleProperty: aProperty [
 	self
 		push: self metrics newPropertyMetrics
 		during: [ 
@@ -126,7 +126,7 @@ MTRASTMetricsExtractor >> visitModuleProperty: aProperty [
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitModulePropertyGet: aProperty [
+MTRASTJinDaoMetricsExtractor >> visitModulePropertyGet: aProperty [
 	| accessorType |
 	aProperty getToken ifNotNil: [ accessorType := #Get ].
 	aProperty setToken ifNotNil: [ accessorType := #Set ].
@@ -140,42 +140,42 @@ MTRASTMetricsExtractor >> visitModulePropertyGet: aProperty [
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitOnErrorGoTo: anObject [
+MTRASTJinDaoMetricsExtractor >> visitOnErrorGoTo: anObject [
 	self metrics incrementCounterFor: #OnErrorGoTo
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitOnErrorResumeNext: onErrorResumeNext [
+MTRASTJinDaoMetricsExtractor >> visitOnErrorResumeNext: onErrorResumeNext [
 	self metrics incrementCounterFor: #OnErrorResumeNext
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitResumeEmpty: anObject [
+MTRASTJinDaoMetricsExtractor >> visitResumeEmpty: anObject [
 	self metrics incrementCounterFor: #ResumeEmpty
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitResumeLabel: anObject [
+MTRASTJinDaoMetricsExtractor >> visitResumeLabel: anObject [
 	self metrics incrementCounterFor: #ResumeLabel
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitResumeNext: anObject [
+MTRASTJinDaoMetricsExtractor >> visitResumeNext: anObject [
 	self metrics incrementCounterFor: #ResumeNext
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitReturn: anObject [
+MTRASTJinDaoMetricsExtractor >> visitReturn: anObject [
 	self metrics incrementCounterFor: #Return
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitSelect: anObject [
+MTRASTJinDaoMetricsExtractor >> visitSelect: anObject [
 	self metrics incrementCounterFor: #Branching
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitSubDefinition: aSub [
+MTRASTJinDaoMetricsExtractor >> visitSubDefinition: aSub [
 	self
 		push: self metrics newSubMetrics
 		during: [ 
@@ -185,18 +185,18 @@ MTRASTMetricsExtractor >> visitSubDefinition: aSub [
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitTypedThing: aTypedThing [
+MTRASTJinDaoMetricsExtractor >> visitTypedThing: aTypedThing [
 	self metrics
 		registerDependancy: (aTypedThing source copyReplaceAll: 'As ' with: '')
 		kind: #Type
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitWhileTrue: anObject [
+MTRASTJinDaoMetricsExtractor >> visitWhileTrue: anObject [
 	self metrics incrementCounterFor: #Loop
 ]
 
 { #category : #initialization }
-MTRASTMetricsExtractor >> visitWhileWend:  anObject [
+MTRASTJinDaoMetricsExtractor >> visitWhileWend:  anObject [
 	self metrics incrementCounterFor: #Loop
 ]

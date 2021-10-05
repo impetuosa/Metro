@@ -1,7 +1,7 @@
 Class {
 	#name : #MTRTableMetric,
 	#superclass : #MTRStructuralMetric,
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #properties }
@@ -11,17 +11,18 @@ MTRTableMetric >> fields [
 ]
 
 { #category : #properties }
-MTRTableMetric >> name [
-	<cvs: #name at: 1>
-	^ properties at: #name ifAbsent: nil
+MTRTableMetric >> members [
+
+	<cvs: #members at: 2>
+	^ properties at: #Members
 ]
 
 { #category : #properties }
 MTRTableMetric >> printOn: aStream [
-	aStream
+aStream
 		nextPutAll:
-			('Table>> fields:{1} name:{2}'
+			('Table>> name:{1} Members:{2}'
 				format:
-					{self fields asString.
-					self name})
+					{self name .
+					self members})
 ]

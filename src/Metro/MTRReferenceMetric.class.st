@@ -1,7 +1,7 @@
 Class {
 	#name : #MTRReferenceMetric,
 	#superclass : #MTRStructuralMetric,
-	#category : #Metro
+	#category : #'Metro-Model'
 }
 
 { #category : #properties }
