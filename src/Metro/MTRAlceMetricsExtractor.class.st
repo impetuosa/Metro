@@ -65,6 +65,8 @@ MTRAlceMetricsExtractor >> measureSourcedEntity: anAlcixClass [
 	self metrics
 		register: #LOC
 		value: anAlcixClass stringContent lines size.
+
+
 	self metrics register: #TypedsBy value: anAlcixClass typeds size.
 	self metrics register: #Constants value: anAlcixClass constants size.
 	self metrics register: #Members value: anAlcixClass members size.
@@ -96,9 +98,10 @@ MTRAlceMetricsExtractor >> metricsFor: anAlcixModel [
 
 	anAlcixModel accept: self.
 	projectMetrics allSourcedEntities do: [ :e | 
-		e model astCannotLoad ifFalse: [
-		MTRASTAlceMetricsExtractor new loadAstMetrics: e.].
+		e model astCannotLoad ifFalse: [ 
+			MTRASTAlceMetricsExtractor new loadAstMetrics: e ].
 		[  ] ].
+
 	^ projectMetrics
 ]
 
@@ -141,9 +144,9 @@ MTRAlceMetricsExtractor >> visitAccessProject: anAlcixAccessProject [
 { #category : #visiting }
 MTRAlceMetricsExtractor >> visitAttributeAccessor: anAlcixAttributeAccessor [
 
-	self
-		push: self metrics newPropertyAccessorMetrics
-		during: [ self measureInvocable: anAlcixAttributeAccessor ]
+	self push: self metrics newPropertyAccessorMetrics during: [ 
+		self measureInvocable: anAlcixAttributeAccessor.
+		self metrics register: #Type value: anAlcixAttributeAccessor kind ]
 ]
 
 { #category : #visiting }

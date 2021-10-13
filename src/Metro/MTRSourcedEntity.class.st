@@ -3,7 +3,8 @@ Class {
 	#superclass : #MTRStructuralMetric,
 	#instVars : [
 		'source',
-		'sourceMetrics'
+		'sourceMetrics',
+		'ast'
 	],
 	#category : #'Metro-Model'
 }
@@ -38,6 +39,13 @@ MTRSourcedEntity >> ast [
 				ifFalse: [ ast := result ] ]
 		onTimeout: [ TimedOut new signal: 'TimeOut' ].
 	^ ast
+]
+
+{ #category : #'instance creation' }
+MTRSourcedEntity >> astSize [
+
+	<cvs: #ASTSize at: 2>
+	^ properties at: #ASTSize ifAbsent: 0
 ]
 
 { #category : #accessing }
@@ -87,6 +95,13 @@ MTRSourcedEntity >> functions [
 MTRSourcedEntity >> grammaticalConsolidatedMetrics [
 
 	^ (self children collect: [ :c | c grammaticalConsolidatedMetrics ])
+		  sum
+]
+
+{ #category : #'as yet unclassified' }
+MTRSourcedEntity >> grammaticalConsolidatedRatioMetrics [
+
+	^ (self children collect: [ :c | c grammaticalConsolidatedRatioMetrics ])
 		  sum
 ]
 

@@ -18,7 +18,12 @@ MTRProjectMetric >> formsPerProject [
 
 { #category : #'as yet unclassified' }
 MTRProjectMetric >> grammaticalCounts [
-		^ self accessModules collect: [  : m | m name -> (m grammaticalConsolidatedMetrics ) ]
+		^ self accessModules collect: [  : m | m model name -> (m grammaticalConsolidatedMetrics ) ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRProjectMetric >> grammaticalRatios [
+		^( self accessModules collect: [  : m | m model name -> (m consolidatedGrammaticalRatios ) ]) asDictionary 
 ]
 
 { #category : #'instance creation' }
@@ -29,7 +34,33 @@ MTRProjectMetric >> newAccessModuleMetric [
 { #category : #'instance creation' }
 MTRProjectMetric >> paradigmaticCounts [
 
-	^ self accessModules collect: [ :m | m model name  ->( m forms size + m reports size + m tables size  + m queries size + m modules size  ) ]
+	^ self accessModules collect: [ :m | 
+		  m model name
+		  ->
+			  (m forms size + m reports size + m tables size + m queries size
+			   + m modules size) ]
+]
+
+{ #category : #'instance creation' }
+MTRProjectMetric >> paradigmaticRates [
+
+	^ self accessModules collect: [ :m | 
+		  m model name -> { 
+			  (m forms size + m reports size + m tables size + m queries size
+			   + m modules size).
+
+			  m classModules size } ]
+]
+
+{ #category : #'instance creation' }
+MTRProjectMetric >> paradigmaticRatios [
+
+	^ (self accessModules collect: [ :m | 
+		  m model name -> { 
+			  (m forms size + m reports size + m tables size + m queries size
+			   + m modules size).
+
+			  m classModules size } ]) asDictionary 
 ]
 
 { #category : #'as yet unclassified' }
@@ -43,8 +74,21 @@ MTRProjectMetric >> referencesCounts [
 MTRProjectMetric >> referencesTangling [
 
 	^ self accessModules collect: [ :m | 
-		  m model name
-		  ->
-			  (self model mooseModel coloringStrategies first colorsFor:
-				   m model) size ]
+		  m model name -> (((self model mooseModel coloringStrategyFor:
+			     AlceHorizontalColorPropagation) colorsFor: m model) collect: [ 
+			   :c | c dueToChainOnlyFst ]) asSet size ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRProjectMetric >> referencesTanglingRatios [
+
+	| tags |
+	self halt. 
+	tags := self accessModules collect: [ :m | 
+		        m model name -> { 
+			        m allAstSizes sum.
+			        (((self model mooseModel coloringStrategyFor:
+				           AlceHorizontalColorPropagation) colorsFor: m model) 
+				         collect: [ :t | t dueToChainOnlyFst ])asSet size } ].
+	^ tags
 ]

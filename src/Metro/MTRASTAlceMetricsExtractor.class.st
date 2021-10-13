@@ -20,21 +20,16 @@ MTRASTAlceMetricsExtractor >> loadAstMetrics: aMTRModuleMetric [
 	| ast |
 	rootmetric := aMTRModuleMetric.
 	stack push: aMTRModuleMetric.
+	ast := aMTRModuleMetric model ast ifNil: [ self halt ].
 
-	ast := aMTRModuleMetric ast.
+
+	self metrics register: #ASTSize value: ast allNodes size.
 	ast acceptVisitor: self
 ]
 
 { #category : #initialization }
 MTRASTAlceMetricsExtractor >> metrics [
 	^ stack top
-]
-
-{ #category : #initialization }
-MTRASTAlceMetricsExtractor >> metricsFor: anAST [
-	self metrics register: #LOC value: anAST source lines size.
-	anAST acceptVisitor: self.
-	^ self metrics
 ]
 
 { #category : #initialization }
@@ -89,17 +84,21 @@ MTRASTAlceMetricsExtractor >> visitForStepNext:  anObject [
 { #category : #initialization }
 MTRASTAlceMetricsExtractor >> visitFunctionDefinition: aFunction [
 
-	self metrics children
-		detect: [ :c | c name = aFunction selector source ]
-		ifFound: [ :context | 
-			self push: context during: [ 
-				self metrics register: #LOC value: aFunction source lines size.
-				super visitSubDefinition: aFunction ] ]
-		ifNone: [ 
-			self push: self metrics newFunctionMetrics during: [ 
-				self metrics register: #Name value: aFunction selector source.
-				self metrics register: #LOC value: aFunction source lines size.
-				super visitFunctionDefinition: aFunction ] ]
+	| context |
+	context := self metrics children
+		           detect: [ :c | c name = aFunction selector source ]
+		           ifFound: [ :p | 
+			           p ]
+		           ifNone: [ 
+							self halt. 
+			           self metrics newFunctionMetrics
+				           name: aFunction selector source;
+				           yourself ].
+
+	self push: context during: [ 
+		self metrics register: #ASTSize value: aFunction allNodes size.
+		self metrics register: #LOC value: aFunction source lines size.
+		super visitFunctionDefinition: aFunction ]
 ]
 
 { #category : #initialization }
@@ -133,9 +132,11 @@ MTRASTAlceMetricsExtractor >> visitModulePropertyGet: aProperty [
 
 	self
 		push: (self metrics children detect: [ :c | 
-				 c name = aProperty selector source ])
+				 c name = aProperty selector source and: [ 
+					 (c value: #Type) = accessorType ] ])
 		during: [ 
-			self metrics register: #Type value: accessorType.
+			self metrics register: #ASTSize value: aProperty allNodes size.
+			self metrics register: #LOC value: aProperty source lines size.
 			super visitModuleProperty: aProperty ]
 ]
 
@@ -177,17 +178,18 @@ MTRASTAlceMetricsExtractor >> visitSelect: anObject [
 { #category : #initialization }
 MTRASTAlceMetricsExtractor >> visitSubDefinition: aSub [
 
-	self metrics children
-		detect: [ :c | c name = aSub selector source ]
-		ifFound: [ :context | 
-			self push: context during: [ 
-				self metrics register: #LOC value: aSub source lines size.
-				super visitSubDefinition: aSub ] ]
-		ifNone: [ 
-			self push: self metrics newFunctionMetrics during: [ 
-				self metrics register: #Name value: aSub selector source.
-				self metrics register: #LOC value: aSub source lines size.
-				super visitFunctionDefinition: aSub ] ]
+	| context |
+	context := self metrics children
+		           detect: [ :c | c name = aSub selector source ]
+		           ifNone: [ 
+			           self metrics newSubMetrics
+				           name: aSub selector source;
+				           yourself ].
+
+	self push: context during: [ 
+		self metrics register: #ASTSize value: aSub allNodes size.
+		self metrics register: #LOC value: aSub source lines size.
+		super visitSubDefinition: aSub ]
 ]
 
 { #category : #initialization }

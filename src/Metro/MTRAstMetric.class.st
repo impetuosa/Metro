@@ -5,10 +5,39 @@ Class {
 }
 
 { #category : #'instance creation' }
+MTRAstMetric >> LOC [
+	^ properties at:#LOC ifAbsent: nil 
+]
+
+{ #category : #'instance creation' }
+MTRAstMetric >> astSize [
+
+	<cvs: #ASTSize at: 2>
+	^ properties at: #ASTSize ifAbsent: nil
+]
+
+{ #category : #'instance creation' }
 MTRAstMetric >> branchings [
 
 	<cvs: #Branchings at: 15>
 	^ self valueOrZero: #Branching
+]
+
+{ #category : #consolidation }
+MTRAstMetric >> cvs [
+	^ ';'
+		join:
+			(self cvsProperties
+				collect: [ :c | (c method valueWithReceiver: self arguments: {}) asString ])
+]
+
+{ #category : #consolidation }
+MTRAstMetric >> cvsProperties [
+	^ Pragma
+		allNamed: #cvs:at:
+		from: self class
+		to: Object
+		sortedUsing: [ :x :y | (x argumentAt: 2) < (y argumentAt: 2) ]
 ]
 
 { #category : #'instance creation' }
@@ -23,9 +52,24 @@ MTRAstMetric >> goSubs [
 	^ self valueOrZero: #GoSub
 ]
 
+{ #category : #'as yet unclassified' }
+MTRAstMetric >> grammaticalConsolidatedRatioMetrics [
+
+	^ self onErrorResumeNext + self onErrorGoTos + self goSubs
+	  + self resumes + self resumeNext + self resumeLabels > 0
+		  ifTrue: [ self astSize ]
+		  ifFalse: [ 0 ]
+]
+
 { #category : #'instance creation' }
 MTRAstMetric >> hadErrorOnCalculation [
 	^ properties at: #ERROR ifPresent: [ true ] ifAbsent: [ false ]
+]
+
+{ #category : #'instance creation' }
+MTRAstMetric >> loc [
+	<cvs: #'LOC' at: 2>
+	^ self LOC
 ]
 
 { #category : #'instance creation' }
@@ -37,6 +81,7 @@ MTRAstMetric >> loops [
 
 { #category : #'instance creation' }
 MTRAstMetric >> newFunctionMetrics [
+	self halt. 
 	^ self newEntryForType: #Function
 ]
 

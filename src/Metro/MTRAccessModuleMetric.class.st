@@ -4,6 +4,13 @@ Class {
 	#category : #'Metro-Model'
 }
 
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> allAstSizes [
+
+	^ self forms , self reports , self modules , self classModules 
+		  collect: [ :n | n astSize ]
+]
+
 { #category : #accessing }
 MTRAccessModuleMetric >> classModules [
 	^ children at: #ClassModule ifAbsent: [ {} ]
@@ -16,6 +23,22 @@ MTRAccessModuleMetric >> classModulesMetrics [
 			 self classModules anyOne columnsHeaders , String crlf
 				, (String crlf join: (self classModules collect: #cvs)) ]
 		ifEmpty: [ '' ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> consolidatedGrammaticalRatios [
+
+	| incompatible all compatible |
+	incompatible := (self forms , self reports , self modules
+	                 , self classModules collect: [ :n | 
+		                 n grammaticalConsolidatedRatioMetrics ]) sum.
+	all := (self forms , self reports , self modules , self classModules 
+		        collect: [ :n | n astSize ]) sum.
+	compatible := all - incompatible.
+
+	^ { 
+		  incompatible.
+		  compatible }
 ]
 
 { #category : #accessing }
