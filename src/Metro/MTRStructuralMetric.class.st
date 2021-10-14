@@ -7,6 +7,23 @@ Class {
 	#category : #'Metro-Model'
 }
 
+{ #category : #consolidation }
+MTRStructuralMetric class >> columnsHeaders [
+
+	^ #'Project;'
+	  ,
+	  (';' join: (self cvsProperties collect: [ :c | c argumentAt: 1 ]))
+]
+
+{ #category : #consolidation }
+MTRStructuralMetric class >> cvsProperties [
+	^ Pragma
+		allNamed: #cvs:at:
+		from: self 
+		to: Object
+		sortedUsing: [ :x :y | (x argumentAt: 2) < (y argumentAt: 2) ]
+]
+
 { #category : #'as yet unclassified' }
 MTRStructuralMetric >> cleanLoading [
 	loading := nil
@@ -14,7 +31,10 @@ MTRStructuralMetric >> cleanLoading [
 
 { #category : #consolidation }
 MTRStructuralMetric >> columnsHeaders [
-	^ ';' join: (self cvsProperties collect: [ :c | c argumentAt: 1 ])
+
+	^ #'Project;'
+	  ,
+	  (';' join: (self cvsProperties collect: [ :c | c argumentAt: 1 ]))
 ]
 
 { #category : #consolidation }

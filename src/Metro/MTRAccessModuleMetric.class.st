@@ -18,11 +18,18 @@ MTRAccessModuleMetric >> classModules [
 
 { #category : #consolidation }
 MTRAccessModuleMetric >> classModulesMetrics [
+
 	^ self classModules
-		ifNotEmpty: [
-			 self classModules anyOne columnsHeaders , String crlf
-				, (String crlf join: (self classModules collect: #cvs)) ]
-		ifEmpty: [ '' ]
+		  ifNotEmpty: [ 
+			  String crlf join:
+				  (self classModules collect: [ :o | self nameCvs , o cvs ]) ]
+		  ifEmpty: [ '' ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> classModulesMetricsHeaders [
+
+	^ MTRClassModuleMetric columnsHeaders
 ]
 
 { #category : #'as yet unclassified' }
@@ -43,36 +50,27 @@ MTRAccessModuleMetric >> consolidatedGrammaticalRatios [
 
 { #category : #accessing }
 MTRAccessModuleMetric >> demographicMetrics [
-	^ String
-		streamContents: [ :str | 
-			str
-				nextPutAll:
-					('Forms: {1} LOC:{2} CustomControls: {3} '
-						format:
-							{self forms size asString.
-							(self forms collect: #loc) sum asString.
-							(self forms collect: #amountCustomControls) sum asString});
-				nextPutAll: OSPlatform current lineEnding;
-				nextPutAll:
-					('Reports: {1} LOC:{2} CustomControls: {3} '
-						format:
-							{self reports size asString.
-							(self reports collect: #loc) sum asString.
-							(self reports collect: #amountCustomControls) sum asString});
-				nextPutAll: OSPlatform current lineEnding;
-				nextPutAll:
-					('Modules: {1} LOC:{2} '
-						format:
-							{self modules size asString.
-							(self modules collect: #LOC) sum asString});
-				nextPutAll: OSPlatform current lineEnding;
-				nextPutAll:
-					('Classes: {1} LOC:{2} '
-						format:
-							{self classModules size asString.
-							(self classModules collect: #LOC) sum asString});
-				nextPutAll: OSPlatform current lineEnding;
-				nextPutAll: ('Macros: {1}  ' format: {self macros size asString}) ]
+
+	^ String streamContents: [ :str | 
+		  str
+			  nextPutAll: ('Forms: {1} LOC:{2} ' format: { 
+							   self forms size asString.
+							   (self forms collect: #loc) sum asString });
+			  nextPutAll: OSPlatform current lineEnding;
+			  nextPutAll: ('Reports: {1} LOC:{2} ' format: { 
+							   self reports size asString.
+							   (self reports collect: #loc) sum asString });
+			  nextPutAll: OSPlatform current lineEnding;
+			  nextPutAll: ('Modules: {1} LOC:{2} ' format: { 
+							   self modules size asString.
+							   (self modules collect: #LOC) sum asString });
+			  nextPutAll: OSPlatform current lineEnding;
+			  nextPutAll: ('Classes: {1} LOC:{2} ' format: { 
+							   self classModules size asString.
+							   (self classModules collect: #LOC) sum asString });
+			  nextPutAll: OSPlatform current lineEnding;
+			  nextPutAll:
+				  ('Macros: {1}  ' format: { self macros size asString }) ]
 ]
 
 { #category : #consolidation }
@@ -92,11 +90,18 @@ MTRAccessModuleMetric >> exportMetrics: aDirectory sufix: aSufixName [
 
 { #category : #consolidation }
 MTRAccessModuleMetric >> formMetrics [
+
 	^ self forms
-		ifNotEmpty: [
-			 self forms anyOne columnsHeaders , String crlf
-				, (String crlf join: (self forms collect: #cvs)) ]
-		ifEmpty: [ '' ]
+		  ifNotEmpty: [ 
+			  String crlf join:
+				  (self forms collect: [ :o | self nameCvs , o cvs ]) ]
+		  ifEmpty: [ '' ]
+]
+
+{ #category : #consolidation }
+MTRAccessModuleMetric >> formMetricsHeaders [
+	^ self forms anyOne columnsHeaders.
+	
 ]
 
 { #category : #accessing }
@@ -111,19 +116,6 @@ MTRAccessModuleMetric >> grammaticalConsolidatedMetrics [
 		   collect: [ :n | n grammaticalConsolidatedMetrics ]) sum
 ]
 
-{ #category : #'as yet unclassified' }
-MTRAccessModuleMetric >> loadAstMetrics [
-	self halt.
-	loading := (self modules collect: [ :m | [ m sourceMetrics ] future ])
-		asOrderedCollection.
-	loading
-		addAll: (self classModules collect: [ :m | [ m sourceMetrics ] future ]).
-	loading
-		addAll: (self forms collect: [ :m | [ m sourceMetrics ] future ]).
-	loading
-		addAll: (self reports collect: [ :m | [ m sourceMetrics ] future ])
-]
-
 { #category : #accessing }
 MTRAccessModuleMetric >> macros [
 	^ children at: #Macro ifAbsent: [ {} ]
@@ -131,11 +123,20 @@ MTRAccessModuleMetric >> macros [
 
 { #category : #consolidation }
 MTRAccessModuleMetric >> macrosMetrics [
+
 	^ self macros
-		ifNotEmpty: [
-			 self macros anyOne columnsHeaders, String crlf
-				, (String crlf join: (self macros collect: #cvs)) ]
-		ifEmpty: [ '' ]
+		  ifNotEmpty: [ 
+			  String crlf join:
+				  (self macros collect: [ :o | self nameCvs , o cvs ]) ]
+		  ifEmpty: [ '' ]
+]
+
+{ #category : #consolidation }
+MTRAccessModuleMetric >> macrosMetricsHeader [
+
+	^ self macros
+		  ifEmpty: [ '' ]
+		  ifNotEmpty: [ self macros anyOne columnsHeaders ]
 ]
 
 { #category : #accessing }
@@ -145,11 +146,30 @@ MTRAccessModuleMetric >> modules [
 
 { #category : #consolidation }
 MTRAccessModuleMetric >> modulesMetrics [
+
 	^ self modules
-		ifNotEmpty: [
-			 self modules anyOne columnsHeaders , String crlf
-				, (String crlf join: (self modules collect: #cvs)) ]
-		ifEmpty: [ '' ]
+		  ifNotEmpty: [ 
+			  String crlf join:
+				  (self modules collect: [ :o | self nameCvs , o cvs ]) ]
+		  ifEmpty: [ '' ]
+]
+
+{ #category : #consolidation }
+MTRAccessModuleMetric >> modulesMetricsHeader [
+
+	^ self modules anyOne columnsHeaders
+]
+
+{ #category : #accessing }
+MTRAccessModuleMetric >> name [
+
+	^ model name
+]
+
+{ #category : #accessing }
+MTRAccessModuleMetric >> nameCvs [
+
+	^ self name , ';'
 ]
 
 { #category : #initialization }
@@ -198,17 +218,6 @@ MTRAccessModuleMetric >> newTableMetric [
 ]
 
 { #category : #'as yet unclassified' }
-MTRAccessModuleMetric >> parserPerformance [
-	| codeBased |
-	codeBased := self modules , self classModules , self forms
-		, self reports collect: #calculatedSourceMetrics.
-	codeBased := codeBased reject: #isNil.
-	codeBased ifEmpty: [ ^ -1 ].
-	^ 100 - ((100 * (codeBased select: [ :m | m hadErrorOnCalculation ]) size
-		/ codeBased size) asFloat)
-]
-
-{ #category : #'as yet unclassified' }
 MTRAccessModuleMetric >> printOn: aStream [
 
 	^ aStream nextPutAll: self demographicMetrics
@@ -221,11 +230,18 @@ MTRAccessModuleMetric >> queries [
 
 { #category : #consolidation }
 MTRAccessModuleMetric >> queriesMetrics [
+
 	^ self queries
-		ifNotEmpty: [
-			 self queries anyOne columnsHeaders , String crlf
-				, (String crlf join: (self queries collect: #cvs)) ]
-		ifEmpty: [ '' ]
+		  ifNotEmpty: [ 
+			  String crlf join:
+				  (self queries collect: [ :o | self nameCvs , o cvs ]) ]
+		  ifEmpty: [ '' ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> queriesMetricsHeaders [
+
+	^ MTRQueryMetric columnsHeaders
 ]
 
 { #category : #initialization }
@@ -244,30 +260,40 @@ MTRAccessModuleMetric >> referencesDetailedTangling [
 
 { #category : #consolidation }
 MTRAccessModuleMetric >> referencesMetrics [
+
 	^ self references
-		ifNotEmpty: [
-			 self references anyOne columnsHeaders , String crlf
-				, (String crlf join: (self references collect: #cvs)) ]
-		ifEmpty: [ '' ]
+		  ifNotEmpty: [ 
+			  String crlf join:
+				  (self references collect: [ :o | self nameCvs , o cvs ]) ]
+		  ifEmpty: [ '' ]
+]
+
+{ #category : #consolidation }
+MTRAccessModuleMetric >> referencesMetricsHeader [
+	^ MTRReferenceMetric columnsHeaders 
+
+	
+]
+
+{ #category : #consolidation }
+MTRAccessModuleMetric >> reportMetrics [
+
+	^ self reports
+		  ifNotEmpty: [ 
+			  String crlf join:
+				  (self reports collect: [ :o | self nameCvs , o cvs ]) ]
+		  ifEmpty: [ '' ]
 ]
 
 { #category : #'as yet unclassified' }
-MTRAccessModuleMetric >> reportMetrics [
-	^ self reportsMetrics
+MTRAccessModuleMetric >> reportMetricsHeaders [
+
+	^ MTRReportMetric columnsHeaders
 ]
 
 { #category : #accessing }
 MTRAccessModuleMetric >> reports [
 	^ children at: #Report ifAbsent: [ {} ]
-]
-
-{ #category : #consolidation }
-MTRAccessModuleMetric >> reportsMetrics [
-	^ self reports
-		ifNotEmpty: [
-			 self reports anyOne columnsHeaders , String crlf
-				, (String crlf join: (self reports collect: #cvs)) ]
-		ifEmpty: [ '' ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -299,9 +325,16 @@ MTRAccessModuleMetric >> tables [
 
 { #category : #consolidation }
 MTRAccessModuleMetric >> tablesMetrics [
+
 	^ self tables
-		ifNotEmpty: [
-			 self tables anyOne columnsHeaders , String crlf
-				, (String crlf join: (self tables collect: #cvs)) ]
-		ifEmpty: [ '' ]
+		  ifNotEmpty: [ 
+			  String crlf join:
+				  (self tables collect: [ :o | self nameCvs , o cvs ]) ]
+		  ifEmpty: [ '' ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> tablesMetricsHeader [
+
+	^ MTRTableMetric columnsHeaders
 ]
