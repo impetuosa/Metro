@@ -103,7 +103,6 @@ MTRMetrics >> properties [
 { #category : #initialization }
 MTRMetrics >> register: aName value: aValue [
 
-	properties at: aName ifPresent: [ self halt ].
 	properties at: aName put: aValue
 ]
 

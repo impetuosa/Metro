@@ -75,14 +75,6 @@ MTRAccessModuleMetric >> demographicMetrics [
 				nextPutAll: ('Macros: {1}  ' format: {self macros size asString}) ]
 ]
 
-{ #category : #'as yet unclassified' }
-MTRAccessModuleMetric >> dropAstMetrics [
-	self modules do: #dropAstMetrics.
-	self classModules do: #dropAstMetrics.
-	self forms do: #dropAstMetrics.
-	self reports do: #dropAstMetrics
-]
-
 { #category : #consolidation }
 MTRAccessModuleMetric >> exportMetrics: aDirectory sufix: aSufixName [
 	| stream |
@@ -121,6 +113,7 @@ MTRAccessModuleMetric >> grammaticalConsolidatedMetrics [
 
 { #category : #'as yet unclassified' }
 MTRAccessModuleMetric >> loadAstMetrics [
+	self halt.
 	loading := (self modules collect: [ :m | [ m sourceMetrics ] future ])
 		asOrderedCollection.
 	loading
@@ -237,7 +230,16 @@ MTRAccessModuleMetric >> queriesMetrics [
 
 { #category : #initialization }
 MTRAccessModuleMetric >> references [
-	^ children at: #Reference
+
+	^ children at: #Reference ifAbsent: [ self resolveTanglingReferences ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> referencesDetailedTangling [
+
+	^ ((self model mooseModel coloringStrategyFor:
+		    AlceHorizontalColorPropagation) colorsFor: model) groupedBy:
+		  #lastLink
 ]
 
 { #category : #consolidation }
@@ -266,6 +268,23 @@ MTRAccessModuleMetric >> reportsMetrics [
 			 self reports anyOne columnsHeaders , String crlf
 				, (String crlf join: (self reports collect: #cvs)) ]
 		ifEmpty: [ '' ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> resolveTanglingReferences [
+
+	| referencesTangleing metric |
+	referencesTangleing := self referencesDetailedTangling.
+
+	referencesTangleing keysAndValuesDo: [ :ref :relations | 
+		metric := self newReferenceMetric.
+		metric model: ref.
+		metric amountOfUsages: relations size.
+		metric amountOfOutgoingPoints:
+			(relations collect: #secondLink) asSet size.
+		metric amountOfIncomingPoints:
+			(relations collect: #beforeLastLink) asSet size ].
+	^ children at: #Reference
 ]
 
 { #category : #accessing }

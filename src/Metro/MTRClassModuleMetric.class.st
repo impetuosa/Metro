@@ -5,19 +5,8 @@ Class {
 }
 
 { #category : #properties }
-MTRClassModuleMetric >> LOC [
-	^ properties at:#LOC ifAbsent: nil 
-]
-
-{ #category : #properties }
 MTRClassModuleMetric >> kind [
 	^ 'ClassModule'
-]
-
-{ #category : #'as yet unclassified' }
-MTRClassModuleMetric >> loc [
-	<cvs: #'LOC' at: 2>
-	^ self LOC
 ]
 
 { #category : #properties }

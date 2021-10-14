@@ -5,25 +5,55 @@ Class {
 }
 
 { #category : #properties }
+MTRReferenceMetric >> amountOfIncomingPoints [
+
+	<cvs: #AmountOfIncomingPoints at: 5>
+	^ properties at: #AmountOfIncomingPoints ifAbsent: 0
+]
+
+{ #category : #properties }
+MTRReferenceMetric >> amountOfIncomingPoints: aVal [
+
+	self register: #AmountOfIncomingPoints value: aVal
+]
+
+{ #category : #properties }
+MTRReferenceMetric >> amountOfOutgoingPoints [
+
+	<cvs: #AmountOfOutgoingPoints at: 4>
+	^ properties at: #AmountOfOutgoingPoints ifAbsent: 0
+]
+
+{ #category : #properties }
+MTRReferenceMetric >> amountOfOutgoingPoints: aVal [
+
+	self register: #AmountOfOutgoingPoints value: aVal
+]
+
+{ #category : #properties }
+MTRReferenceMetric >> amountOfUsages [
+
+	<cvs: #AmountOfUsages at: 3>
+	^ properties at: #AmountOfUsages ifAbsent: 0
+]
+
+{ #category : #properties }
+MTRReferenceMetric >> amountOfUsages: aVal [
+
+	self register: #AmountOfUsages value: aVal
+]
+
+{ #category : #properties }
 MTRReferenceMetric >> builtIn [
 	<cvs: #'Built In' at: 2>
-	^ properties at:#BuiltIn ifAbsent: nil 
-]
-
-{ #category : #properties }
-MTRReferenceMetric >> major [
-	^ properties at:#Major ifAbsent: nil 
-]
-
-{ #category : #properties }
-MTRReferenceMetric >> minor [
-	^ properties at:#Minor ifAbsent: nil 
+	^ model isBuiltIn 
 ]
 
 { #category : #properties }
 MTRReferenceMetric >> path [
+
 	<cvs: #path at: 1>
-	^ (properties at:#Path ifAbsent: nil )
+	^ model path
 ]
 
 { #category : #properties }

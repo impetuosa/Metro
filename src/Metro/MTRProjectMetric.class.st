@@ -10,6 +10,22 @@ MTRProjectMetric >> accessModules [
 	^ children at: #AccessModule ifAbsent: [ {  } ]
 ]
 
+{ #category : #'as yet unclassified' }
+MTRProjectMetric >> exportCVS [
+
+	| projectBase |
+	projectBase := self model name asFileReference
+		               ensureCreateDirectory;
+		               yourself.
+	self accessModules do: [ :module | 
+		| base |
+		base := (projectBase / module model name)
+			        ensureCreateDirectory;
+			        yourself.
+
+		module exportMetrics: base sufix: '' ]
+]
+
 { #category : #'instance creation' }
 MTRProjectMetric >> formsPerProject [
 
@@ -68,6 +84,13 @@ MTRProjectMetric >> referencesCounts [
 
 	^ self accessModules collect: [ :m | 
 		  m model name -> m model references size ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRProjectMetric >> referencesDetailedTangling [
+
+	^ self accessModules collect: [ :m | 
+		  m model name -> m referenceDetailedTangling ]
 ]
 
 { #category : #'as yet unclassified' }

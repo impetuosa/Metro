@@ -64,7 +64,8 @@ MTRAlceMetricsExtractor >> measureSourcedEntity: anAlcixClass [
 	self metrics source: anAlcixClass stringContent.
 	self metrics
 		register: #LOC
-		value: anAlcixClass stringContent lines size.
+		value: (anAlcixClass stringContent lines reject: [ :l | 
+				 (l beginsWith: '''') or: [ l trimBoth isEmpty ] ]) size.
 
 
 	self metrics register: #TypedsBy value: anAlcixClass typeds size.
@@ -79,12 +80,21 @@ MTRAlceMetricsExtractor >> measureSourcedEntity: anAlcixClass [
 MTRAlceMetricsExtractor >> measureWidget: anAlcixReport [
 
 	self metrics model: anAlcixReport.
-	self assert: (anAlcixReport superclass isNil or: [ 
-			 { '_Form'. '_Report' } includes: anAlcixReport superclass name ]).
+	self assert:
+		({ '_Form'. '_Report' } includes: anAlcixReport superclass name).
 	self metrics
 		register: #hasModule
 		value: anAlcixReport stringContent isEmptyOrNil.
-	self measureSourcedEntity: anAlcixReport
+	self measureSourcedEntity: anAlcixReport.
+
+
+
+	(((anAlcixReport initializers flatCollect: #assignments) 
+		  flatCollect: #readElements) flatCollect: #candidates) do: [ 
+		:dependency | 
+		self metrics
+			registerDependancy: dependency
+			kind: (dependency class name copyReplaceAll: #Alcix with: '') ]
 ]
 
 { #category : #'accessing - structure variables' }
@@ -124,7 +134,8 @@ MTRAlceMetricsExtractor >> visitAccessModule: anAlcixAccessModule [
 	self push: self metrics newAccessModuleMetric during: [ 
 		self metrics model: anAlcixAccessModule.
 		self visitCollection: anAlcixAccessModule types.
-		self visitReferences: anAlcixAccessModule references ]
+		self visitReferences: anAlcixAccessModule references
+	 ]
 ]
 
 { #category : #visiting }
@@ -245,7 +256,6 @@ MTRAlceMetricsExtractor >> visitQuery: anAlcixQuery [
 
 { #category : #visiting }
 MTRAlceMetricsExtractor >> visitReferences: aCollection [ 
-
 ]
 
 { #category : #visiting }

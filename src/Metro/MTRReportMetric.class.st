@@ -5,23 +5,17 @@ Class {
 }
 
 { #category : #properties }
-MTRReportMetric >> amountCustomControls [
-	<cvs: #'Custom Controls' at: 5>
-	^ dependancies
-		count: [ :d | 
-			d isArray
-				ifTrue: [ d first = 'CustomControl' ]
-				ifFalse: [ d isKindOf: MTRCustomControlType ] ]
+MTRReportMetric >> amountTableFields [
+
+	<cvs: #'TableFields used' at: 6>
+	^ dependancies count: [ :d | d first = 'TableField' ]
 ]
 
 { #category : #properties }
 MTRReportMetric >> amountTables [
+
 	<cvs: #'Tables Used' at: 6>
-	^ dependancies
-		count: [ :d | 
-			d isArray
-				ifTrue: [ d first = 'Table' ]
-				ifFalse: [ d isKindOf: MTRTableMetric ] ]
+	^ dependancies count: [ :d | d first = 'Table' ]
 ]
 
 { #category : #properties }
@@ -29,18 +23,6 @@ MTRReportMetric >> companionModule [
 	^ (children at: #ClassModule ifAbsent: [ {} ])
 		ifEmpty: [ nil ]
 		ifNotEmpty: [ :s | s first ]
-]
-
-{ #category : #properties }
-MTRReportMetric >> controls [
-	<cvs: #Controls at: 3>
-	^ properties at: #Controls ifAbsent: nil
-]
-
-{ #category : #properties }
-MTRReportMetric >> dropAstMetrics [
-	sourceMetrics := nil.
-	^ self companionModule ifNotNil: [ :mod | mod dropAstMetrics ]
 ]
 
 { #category : #properties }
@@ -63,11 +45,9 @@ MTRReportMetric >> loc [
 MTRReportMetric >> printOn: aStream [
 	aStream
 		nextPutAll:
-			('Report>> controls:{2} customs:{3} tables:{4} loc:{5} deps:{6} name:{1} '
+			('Form>> tables:{2} loc:{3} deps:{4} name:{1} '
 				format:
 					{self name.
-					self controls.
-					self amountCustomControls.
 					self amountTables.
 					self loc.
 					self allDependencies size})
@@ -81,16 +61,4 @@ MTRReportMetric >> properties [
 { #category : #properties }
 MTRReportMetric >> source [
 	^ self companionModule ifNotNil: [ :mod | mod source ]
-]
-
-{ #category : #properties }
-MTRReportMetric >> sourceMetrics [
-	^ self companionModule
-		ifNotNil: [ :mod | sourceMetrics := mod sourceMetrics ]
-]
-
-{ #category : #properties }
-MTRReportMetric >> type [
-	<cvs: #Type at: 4>
-	^ properties at: #type ifAbsent: nil
 ]

@@ -220,7 +220,7 @@ MTRJinDaoStructuralMetricsExtractor >> visitSubForm: aSubform [
 	super visitSubForm: aSubform
 ]
 
-{ #category : #'visit-first-objects' }
+{ #category : #'as yet unclassified' }
 MTRJinDaoStructuralMetricsExtractor >> visitTable: anObject [
 	self
 		push: self metrics newTableMetric
