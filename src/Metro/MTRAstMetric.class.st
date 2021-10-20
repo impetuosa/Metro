@@ -57,7 +57,7 @@ MTRAstMetric >> grammaticalConsolidatedRatioMetrics [
 
 	^ self onErrorResumeNext + self onErrorGoTos + self goSubs
 	  + self resumes + self resumeNext + self resumeLabels > 0
-		  ifTrue: [ self astSize ]
+		  ifTrue: [ self loc ]
 		  ifFalse: [ 0 ]
 ]
 

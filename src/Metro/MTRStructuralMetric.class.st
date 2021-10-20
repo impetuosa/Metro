@@ -54,6 +54,13 @@ MTRStructuralMetric >> cvsProperties [
 		sortedUsing: [ :x :y | (x argumentAt: 2) < (y argumentAt: 2) ]
 ]
 
+{ #category : #consolidation }
+MTRStructuralMetric >> cvsProps [
+
+	^ self cvsProperties collect: [ :c | 
+		  c method valueWithReceiver: self arguments: {  } ]
+]
+
 { #category : #accessing }
 MTRStructuralMetric >> printOn: aStream [
 

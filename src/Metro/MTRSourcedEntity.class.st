@@ -145,6 +145,13 @@ MTRSourcedEntity >> codeElementValue: aString [
 		thenCollect: [ :c | c properties at: aString ]
 ]
 
+{ #category : #'as yet unclassified' }
+MTRSourcedEntity >> cvsProps [
+
+	^ self cvsProperties collect: [ :c | 
+		  c method valueWithReceiver: self arguments: {  } ]
+]
+
 { #category : #accessing }
 MTRSourcedEntity >> dropAstMetrics [
 	sourceMetrics := nil

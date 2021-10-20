@@ -40,7 +40,7 @@ MTRAccessModuleMetric >> consolidatedGrammaticalRatios [
 	                 , self classModules collect: [ :n | 
 		                 n grammaticalConsolidatedRatioMetrics ]) sum.
 	all := (self forms , self reports , self modules , self classModules 
-		        collect: [ :n | n astSize ]) sum.
+		        collect: [ :n | n loc ]) sum.
 	compatible := all - incompatible.
 
 	^ { 
@@ -71,21 +71,6 @@ MTRAccessModuleMetric >> demographicMetrics [
 			  nextPutAll: OSPlatform current lineEnding;
 			  nextPutAll:
 				  ('Macros: {1}  ' format: { self macros size asString }) ]
-]
-
-{ #category : #consolidation }
-MTRAccessModuleMetric >> exportMetrics: aDirectory sufix: aSufixName [
-	| stream |
-	{#formMetrics . #macrosMetrics . #modulesMetrics . #classModulesMetrics.
-	#referencesMetrics . #queriesMetrics . #tablesMetrics . #reportMetrics}
-		do: [ :m | 
-			stream := (aDirectory / (aSufixName , m , '.csv')) writeStream.
-			stream
-				nextPutAll: (self perform: m);
-				flush;
-				close.
-			(aDirectory / (aSufixName , m , '.csv')) readStream upToEnd isEmpty
-				ifTrue: [ (aDirectory / (aSufixName , m , '.csv')) ensureDelete ] ]
 ]
 
 { #category : #consolidation }

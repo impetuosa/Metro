@@ -17,6 +17,38 @@ MTRProjectMetric >> classModulesMetrics [
 	  , (String crlf join: (self accessModules collect: #classModulesMetrics))
 ]
 
+{ #category : #accessing }
+MTRProjectMetric >> demographicMetricsCvs [
+
+	| forms reports classModules modules tables query |
+	forms := 'Forms;' , String crlf , MTRFormMetric columnsHeaders
+	         , String crlf
+	         , (self getAndNormalizeConsolidationFor: #forms).
+	reports := 'Reports;' , String crlf , MTRReportMetric columnsHeaders
+	           , String crlf
+	           , (self getAndNormalizeConsolidationFor: #reports).
+	classModules := 'Classes;' , String crlf
+	                , MTRClassModuleMetric columnsHeaders , String crlf
+	                ,
+	                (self getAndNormalizeConsolidationFor: #classModules).
+	modules := 'Modules;' , String crlf , MTRModuleMetric columnsHeaders
+	           , String crlf
+	           , (self getAndNormalizeConsolidationFor: #modules).
+	tables := 'Tables;' , String crlf , MTRTableMetric columnsHeaders
+	          , String crlf
+	          , (self getAndNormalizeConsolidationFor: #tables).
+	query := 'Queries;' , String crlf , MTRQueryMetric columnsHeaders
+	         , String crlf
+	         , (self getAndNormalizeConsolidationFor: #queries).
+	^ String crlf , String crlf , String crlf join: { 
+			  forms.
+			  reports.
+			  classModules.
+			  modules.
+			  tables.
+			  query }
+]
+
 { #category : #'as yet unclassified' }
 MTRProjectMetric >> exportCVS [
 
@@ -31,16 +63,16 @@ MTRProjectMetric >> exportCVS [
 MTRProjectMetric >> exportMetrics: aDirectory sufix: aSufixName [
 
 	| stream |
-	{ #formMetrics. #macrosMetrics. #modulesMetrics. #classModulesMetrics.
-	#referencesMetrics. #queriesMetrics. #tablesMetrics. #reportMetrics } 
-		do: [ :m | 
-			stream := (aDirectory / (aSufixName , m , '.csv')) writeStream.
-			stream
-				nextPutAll: (self perform: m);
-				flush;
-				close.
-			(aDirectory / (aSufixName , m , '.csv')) readStream upToEnd isEmpty 
-				ifTrue: [ (aDirectory / (aSufixName , m , '.csv')) ensureDelete ] ]
+	{ #formMetrics . #macrosMetrics . #modulesMetrics . #classModulesMetrics .
+	#referencesMetrics . #queriesMetrics . #tablesMetrics . #reportMetrics .
+	#demographicMetricsCvs . #measureMetrics } do: [ :m | 
+		stream := (aDirectory / (aSufixName , m , '.csv')) writeStream.
+		stream
+			nextPutAll: (self perform: m);
+			flush;
+			close.
+		(aDirectory / (aSufixName , m , '.csv')) readStream upToEnd isEmpty 
+			ifTrue: [ (aDirectory / (aSufixName , m , '.csv')) ensureDelete ] ]
 ]
 
 { #category : #consolidation }
@@ -54,6 +86,32 @@ MTRProjectMetric >> formMetrics [
 MTRProjectMetric >> formsPerProject [
 
 	^ self accessModules collect: [ :m | m model name  -> m forms size ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRProjectMetric >> getAndNormalizeConsolidationFor: aString [
+
+	| values full size |
+	values := self accessModules collect: [ :accessModules | 
+		          ((accessModules perform: aString asSymbol) collect: [ 
+			           :form | 
+			           form cvsProps allButFirst collect: [ :propValue | 
+				           (propValue = 'Unknown' or: [ propValue isNil ])
+					           ifTrue: [ 0 ]
+					           ifFalse: [ propValue ] ] ]) sum ].
+
+
+	size := (values detect: [ :v | v isCollection ]) size.
+	values := values collect: [ :v | 
+		          v isCollection
+			          ifFalse: [ (ByteArray new: size) asArray ]
+			          ifTrue: [ v ] ].
+	full := { 'Total' } , values sum.
+	^ String crlf join:
+		  ((values
+			    with: self accessModules
+			    collect: [ :v :a | { a name } , v ]) , { full } collect: [ :a | 
+			   ';' join: (a collect: [ :b | b asString ]) ])
 ]
 
 { #category : #'as yet unclassified' }
@@ -71,6 +129,12 @@ MTRProjectMetric >> macrosMetrics [
 
 	^ self accessModules anyOne macrosMetricsHeader , String crlf
 	  , (String crlf join: (self accessModules collect: #macrosMetrics))
+]
+
+{ #category : #'as yet unclassified' }
+MTRProjectMetric >> measureMetrics [
+
+	^ ''
 ]
 
 { #category : #consolidation }

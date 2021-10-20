@@ -38,21 +38,6 @@ MTRJinDaoStructuralMetricsExtractor class >> egrcMetrics [
 ]
 
 { #category : #'as yet unclassified' }
-MTRJinDaoStructuralMetricsExtractor class >> exportCVS [
-	generalMetrics
-		keysAndValuesDo: [ :k :v | 
-			| base |
-			base := (k copyReplaceAll: '.accdb' with: '') asFileReference
-				basename.
-			v
-				exportMetrics:
-					(base asFileReference
-						ensureCreateDirectory;
-						yourself)
-				sufix: '' ]
-]
-
-{ #category : #'as yet unclassified' }
 MTRJinDaoStructuralMetricsExtractor class >> generalMetrics [
 	^ generalMetrics
 ]
