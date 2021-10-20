@@ -231,6 +231,16 @@ MTRAccessModuleMetric >> paradigmaticCounts [
 		 ]
 ]
 
+{ #category : #'instance creation' }
+MTRAccessModuleMetric >> paradigmaticRatios [
+
+	^ { { 
+		  (self forms size + self reports size + self tables size
+		   + self queries size + self modules size).
+
+		  self classModules size } }
+]
+
 { #category : #'as yet unclassified' }
 MTRAccessModuleMetric >> printOn: aStream [
 

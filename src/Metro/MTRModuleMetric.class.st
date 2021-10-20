@@ -20,6 +20,19 @@ MTRModuleMetric >> loc [
 	^ self LOC
 ]
 
+{ #category : #'instance creation' }
+MTRModuleMetric >> paradigmaticRatios [
+
+	^ ({ 
+		   MTRModuleMetric.
+		   MTRTableMetric.
+		   MTRQueryMetric.
+		   MTRFormMetric.
+		   MTRReportMetric } anySatisfy: [ :a | self isKindOf: a ])
+		  ifTrue: [ { { 1. 0 } } ]
+		  ifFalse: [ { { 0. 1 } } ]
+]
+
 { #category : #properties }
 MTRModuleMetric >> printOn: aStream [
 	aStream

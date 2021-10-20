@@ -148,6 +148,11 @@ MTRMetricsFinder >> visitReport: anAlcixForm [
 ]
 
 { #category : #visiting }
+MTRMetricsFinder >> visitReturn: anAlcixReturn [ 
+
+]
+
+{ #category : #visiting }
 MTRMetricsFinder >> visitSubProcedure: anAlcixSubProcedure [
 
 	self visitAttribute: anAlcixSubProcedure

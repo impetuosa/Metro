@@ -15,3 +15,9 @@ MTRFunctionMetric >> grammaticalConsolidatedMetrics [
 MTRFunctionMetric >> paradigmaticCounts [
 	^ {}
 ]
+
+{ #category : #'instance creation' }
+MTRFunctionMetric >> paradigmaticRatios [
+
+	^ {  }
+]

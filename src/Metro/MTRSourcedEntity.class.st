@@ -304,6 +304,19 @@ MTRSourcedEntity >> paradigmaticCounts [
 ]
 
 { #category : #'csv properties' }
+MTRSourcedEntity >> paradigmaticRatios [
+
+	^ ({ 
+		   MTRModuleMetric.
+		   MTRTableMetric.
+		   MTRQueryMetric.
+		   MTRFormMetric.
+		   MTRReportMetric } anySatisfy: [ :a | self isKindOf: a ])
+		  ifTrue: [ { { 1. 0 } } ]
+		  ifFalse: [ { { 0. 1 } } ]
+]
+
+{ #category : #'csv properties' }
 MTRSourcedEntity >> propertyAccessors [
 
 	<cvs: #PropertiesAccessors at: 12>
