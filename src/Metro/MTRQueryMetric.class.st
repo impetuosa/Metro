@@ -10,6 +10,12 @@ MTRQueryMetric >> fields [
 	^ properties at: #Fields ifAbsent: nil
 ]
 
+{ #category : #'as yet unclassified' }
+MTRQueryMetric >> grammaticalCounts [
+
+	^ {  }
+]
+
 { #category : #properties }
 MTRQueryMetric >> members [
 

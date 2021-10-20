@@ -61,12 +61,34 @@ MTRStructuralMetric >> cvsProps [
 		  c method valueWithReceiver: self arguments: {  } ]
 ]
 
+{ #category : #'instance creation' }
+MTRStructuralMetric >> paradigmaticCounts [
+
+	^ ({ 
+		   MTRModuleMetric.
+		   MTRTableMetric.
+		   MTRQueryMetric.
+		   MTRFormMetric.
+		   MTRReportMetric } anySatisfy: [ :a | self isKindOf: a ])
+		  ifTrue: [ { ((self classNameWithOutMtr: self className) -> 1) } ]
+		  ifFalse: [ { ((self classNameWithOutMtr: self className) -> 0) } ]
+]
+
 { #category : #accessing }
 MTRStructuralMetric >> printOn: aStream [
 
 	aStream
 		nextPutAll: 'Chidlren#';
 		nextPutAll: self children size asString
+]
+
+{ #category : #consolidation }
+MTRStructuralMetric >> referencesTangling [
+
+	^ (((self model mooseModel selectedColoringStrategy colorsFor:
+		     self model) collect: #dueToChainOnlyFst) groupedBy: [ :a | 
+		   a at: a size - 1 ]) associations collect: [ :a | 
+		  a key name -> a value size ]
 ]
 
 { #category : #initialization }

@@ -180,6 +180,33 @@ MTRSourcedEntity >> grammaticalConsolidatedRatioMetrics [
 		  sum
 ]
 
+{ #category : #'as yet unclassified' }
+MTRSourcedEntity >> grammaticalCounts [
+
+	^ (self children groupedBy: #class) associations collect: [ :a | 
+		  (self classNameWithOutMtr: a key name)
+		  ->
+		  (self
+			   consolidate: a value
+			   message: #grammaticalConsolidatedMetrics) ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRSourcedEntity >> grammaticalRatios [
+
+	| incompatible all compatible |
+	incompatible := self grammaticalConsolidatedRatioMetrics.
+
+
+
+	all := self loc.
+	compatible := all - incompatible.
+
+	^ { { 
+		  incompatible.
+		  compatible } }
+]
+
 { #category : #'instance creation' }
 MTRSourcedEntity >> hadErrorOnCalculation [
 
@@ -261,6 +288,19 @@ MTRSourcedEntity >> onErrorResumeNext [
 	<cvs: #ErrorResumeNext at: 13>
 	self hadErrorOnCalculation ifTrue: [ ^ 'Unknown' ].
 	^ (self invocables collect: #onErrorResumeNext) sum
+]
+
+{ #category : #'instance creation' }
+MTRSourcedEntity >> paradigmaticCounts [
+
+	^ ({ 
+		   MTRModuleMetric.
+		   MTRTableMetric.
+		   MTRQueryMetric.
+		   MTRFormMetric.
+		   MTRReportMetric } anySatisfy: [ :a | self isKindOf: a ])
+		  ifTrue: [ { ((self classNameWithOutMtr: self className) -> 1) } ]
+		  ifFalse: [ { ((self classNameWithOutMtr: self className) -> 0) } ]
 ]
 
 { #category : #'csv properties' }

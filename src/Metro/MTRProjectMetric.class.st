@@ -137,6 +137,14 @@ MTRProjectMetric >> measureMetrics [
 	^ ''
 ]
 
+{ #category : #initialization }
+MTRProjectMetric >> metricsFor: anAlcixAccessModule [
+
+	^ MTRMetricsFinder new
+		  projectMetrics: self;
+		  findMetricsFor: anAlcixAccessModule
+]
+
 { #category : #consolidation }
 MTRProjectMetric >> modulesMetrics [
 

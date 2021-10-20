@@ -10,6 +10,12 @@ MTRTableMetric >> fields [
 	^ properties at: #Fields ifAbsent: nil
 ]
 
+{ #category : #'as yet unclassified' }
+MTRTableMetric >> grammaticalCounts [
+
+	^ {  }
+]
+
 { #category : #properties }
 MTRTableMetric >> members [
 

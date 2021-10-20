@@ -42,6 +42,21 @@ MTRMetrics >> children [
 ]
 
 { #category : #'as yet unclassified' }
+MTRMetrics >> classNameWithOutMtr: aString [
+
+	^ (aString name copyReplaceAll: #MTR with: '')
+		  copyReplaceAll: 'Metric'
+		  with: ''
+]
+
+{ #category : #'as yet unclassified' }
+MTRMetrics >> consolidate: aCollection message: aSelector [ 
+	| values |
+	values := aCollection collect: [ : a | a perform: aSelector  ].
+	^ values sum
+]
+
+{ #category : #'as yet unclassified' }
 MTRMetrics >> dependencies [
 	^ dependancies 
 ]

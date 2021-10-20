@@ -28,6 +28,13 @@ MTRASTAlceMetricsExtractor >> loadAstMetrics: aMTRModuleMetric [
 ]
 
 { #category : #initialization }
+MTRASTAlceMetricsExtractor >> locFor: aProperty [
+
+	^ (aProperty source lines select: [ :l | 
+		   (l beginsWith: '''') or: [ l trimBoth isEmpty ] ]) size
+]
+
+{ #category : #initialization }
 MTRASTAlceMetricsExtractor >> metrics [
 	^ stack top
 ]
@@ -85,19 +92,11 @@ MTRASTAlceMetricsExtractor >> visitForStepNext:  anObject [
 MTRASTAlceMetricsExtractor >> visitFunctionDefinition: aFunction [
 
 	| context |
-	context := self metrics children
-		           detect: [ :c | c name = aFunction selector source ]
-		           ifFound: [ :p | 
-			           p ]
-		           ifNone: [ 
-							self halt. 
-			           self metrics newFunctionMetrics
-				           name: aFunction selector source;
-				           yourself ].
-
+	context := self metrics children detect: [ :c | 
+		           c name = aFunction selector source ].
 	self push: context during: [ 
 		self metrics register: #ASTSize value: aFunction allNodes size.
-		self metrics register: #LOC value: aFunction source lines size.
+		self metrics register: #LOC value: (self locFor: aFunction).
 		super visitFunctionDefinition: aFunction ]
 ]
 
@@ -136,7 +135,7 @@ MTRASTAlceMetricsExtractor >> visitModulePropertyGet: aProperty [
 					 (c value: #Type) = accessorType ] ])
 		during: [ 
 			self metrics register: #ASTSize value: aProperty allNodes size.
-			self metrics register: #LOC value: aProperty source lines size.
+			self metrics register: #LOC value: (self locFor: aProperty).
 			super visitModuleProperty: aProperty ]
 ]
 
@@ -179,16 +178,13 @@ MTRASTAlceMetricsExtractor >> visitSelect: anObject [
 MTRASTAlceMetricsExtractor >> visitSubDefinition: aSub [
 
 	| context |
-	context := self metrics children
-		           detect: [ :c | c name = aSub selector source ]
-		           ifNone: [ 
-			           self metrics newSubMetrics
-				           name: aSub selector source;
-				           yourself ].
+	context := self metrics children detect: [ :c | 
+		           c name = aSub selector source ].
+
 
 	self push: context during: [ 
 		self metrics register: #ASTSize value: aSub allNodes size.
-		self metrics register: #LOC value: aSub source lines size.
+		self metrics register: #LOC value: (self locFor: aSub).
 		super visitSubDefinition: aSub ]
 ]
 

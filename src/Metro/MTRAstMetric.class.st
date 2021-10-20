@@ -61,6 +61,33 @@ MTRAstMetric >> grammaticalConsolidatedRatioMetrics [
 		  ifFalse: [ 0 ]
 ]
 
+{ #category : #'as yet unclassified' }
+MTRAstMetric >> grammaticalCounts [
+
+	^ { 
+		  (#OnErrorResumeNext -> self onErrorResumeNext).
+		  (#OnErrorGoTo -> self onErrorGoTos).
+		  (#GoSub -> self goSubs).
+		  (#Resume -> self resumes).
+		  (#ResumeNext -> self resumeNext).
+		  (#ResumeLabel -> self resumeLabels) } select: [ :a | a value > 0 ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRAstMetric >> grammaticalRatios [
+	| incompatible all compatible |
+	incompatible := self grammaticalConsolidatedRatioMetrics.
+
+
+
+	all := self loc.
+	compatible := all - incompatible.
+
+	^ { { 
+		  incompatible.
+		  compatible } }
+]
+
 { #category : #'instance creation' }
 MTRAstMetric >> hadErrorOnCalculation [
 	^ properties at: #ERROR ifPresent: [ true ] ifAbsent: [ false ]
@@ -151,6 +178,15 @@ MTRAstMetric >> property [
 { #category : #'instance creation' }
 MTRAstMetric >> propertyAccessors [
 	^ children at: #PropertyAccessor ifAbsent: [ {} ]
+]
+
+{ #category : #'instance creation' }
+MTRAstMetric >> referencesTangling [
+
+	^ (((self model mooseModel selectedColoringStrategy colorsFor:
+		     self model) collect: #dueToChainOnlyFst) groupedBy: [ :a | 
+		   a at: a size - 1 ]) associations collect: [ :a | 
+		  a key name -> a value size ]
 ]
 
 { #category : #'instance creation' }

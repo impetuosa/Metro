@@ -101,6 +101,24 @@ MTRAccessModuleMetric >> grammaticalConsolidatedMetrics [
 		   collect: [ :n | n grammaticalConsolidatedMetrics ]) sum
 ]
 
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> grammaticalCounts [
+
+	^ ((self children select: [ :c | c isKindOf: MTRSourcedEntity ]) 
+		   groupedBy: #class) associations collect: [ :a | 
+		  (self classNameWithOutMtr: a key name)
+		  ->
+		  (self
+			   consolidate: a value
+			   message: #grammaticalConsolidatedMetrics) ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> grammaticalRatios [
+
+	^ { self consolidatedGrammaticalRatios }
+]
+
 { #category : #accessing }
 MTRAccessModuleMetric >> macros [
 	^ children at: #Macro ifAbsent: [ {} ]
@@ -202,6 +220,17 @@ MTRAccessModuleMetric >> newTableMetric [
 	^ self newEntryForType: #Table
 ]
 
+{ #category : #'instance creation' }
+MTRAccessModuleMetric >> paradigmaticCounts [
+
+	
+	^ ((self children reject: [ :c | c isKindOf: MTRClassModuleMetric  ]) 
+		   groupedBy: #class) associations collect: [ :a | 
+		  (self classNameWithOutMtr: a key name)
+		  ->  a value size 
+		 ]
+]
+
 { #category : #'as yet unclassified' }
 MTRAccessModuleMetric >> printOn: aStream [
 
@@ -258,6 +287,14 @@ MTRAccessModuleMetric >> referencesMetricsHeader [
 	^ MTRReferenceMetric columnsHeaders 
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> referencesTangling [
+
+	^ ((self model mooseModel selectedColoringStrategy colorsFor:
+		    self model) groupedBy: #tag) associations collect: [ :a | 
+		  a key name -> a value size ]
 ]
 
 { #category : #consolidation }
