@@ -42,6 +42,11 @@ MTRMetricsFinder >> visitAccessModule: anAlcixAccessModule [
 ]
 
 { #category : #visiting }
+MTRMetricsFinder >> visitAlias: anAlcixAlias [ 
+	
+]
+
+{ #category : #visiting }
 MTRMetricsFinder >> visitAssignment: anAlcixAssignment [ 
 	anAlcixAssignment owner accept: self
 ]
@@ -72,6 +77,17 @@ MTRMetricsFinder >> visitClass: anAlcixClass [
 { #category : #visiting }
 MTRMetricsFinder >> visitConstant: anAlcixConstant [ 
 	anAlcixConstant owner accept: self 
+]
+
+{ #category : #visiting }
+MTRMetricsFinder >> visitEnum: anAlcixEnum [ 
+	anAlcixEnum container accept: self 
+]
+
+{ #category : #visiting }
+MTRMetricsFinder >> visitEvent: anAlcixEvent [
+
+	self visitAttribute: anAlcixEvent
 ]
 
 { #category : #visiting }
@@ -161,4 +177,9 @@ MTRMetricsFinder >> visitSubProcedure: anAlcixSubProcedure [
 { #category : #visiting }
 MTRMetricsFinder >> visitTable: anAlcixTable [ 
 	self visitModule: anAlcixTable 
+]
+
+{ #category : #visiting }
+MTRMetricsFinder >> visitUserType: anAlcixUserType [ 
+	anAlcixUserType container accept: self 
 ]

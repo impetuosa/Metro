@@ -214,3 +214,29 @@ MTRAstMetric >> resumes [
 MTRAstMetric >> subs [
 	^ children at: #SubProcedure ifAbsent: [ {} ]
 ]
+
+{ #category : #'as yet unclassified' }
+MTRAstMetric >> tanglingLanguageReferencesRatios [
+
+	| rats langs rest |
+	rats := self tanglingReferencesRatios.
+	langs := (rats associations
+		          select: [ :a | a key name = #Language ]
+		          thenCollect: [ :a | a value ]) sum.
+	rest := (rats associations
+		         reject: [ :a | a key name = #Language ]
+		         thenCollect: [ :a | a value ]) sum.
+	^ { 
+		  (langs max: 1).
+		  (rest max: 1) }
+]
+
+{ #category : #'as yet unclassified' }
+MTRAstMetric >> tanglingReferencesRatios [
+
+	| baseline |
+	baseline := model mooseModel selectedColoringStrategy colorsFor:
+		            model.
+	^ ((baseline groupedBy: #tag) associations collect: [ :assoc | 
+		   assoc key -> assoc value size ]) asDictionary
+]

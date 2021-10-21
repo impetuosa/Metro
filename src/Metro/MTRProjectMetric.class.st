@@ -220,9 +220,10 @@ MTRProjectMetric >> referencesMetrics [
 MTRProjectMetric >> referencesTangling [
 
 	^ self accessModules collect: [ :m | 
-		  m model name -> (((self model mooseModel coloringStrategyFor:
-			     AlceHorizontalColorPropagation) colorsFor: m model) collect: [ 
-			   :c | c dueToChainOnlyFst ]) asSet size ]
+		  m model name
+		  ->
+			  ((self model mooseModel selectedColoringStrategy colorsFor:
+				    m model) collect: [ :c | c dueToChainOnlyFst ]) asSet size ]
 ]
 
 { #category : #'as yet unclassified' }

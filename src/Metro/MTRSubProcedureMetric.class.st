@@ -4,6 +4,13 @@ Class {
 	#category : #'Metro-Model'
 }
 
+{ #category : #'instance creation' }
+MTRSubProcedureMetric >> astSize [
+
+	<cvs: #ASTSize at: 2>
+	^ properties at: #ASTSize ifAbsent: 1
+]
+
 { #category : #'as yet unclassified' }
 MTRSubProcedureMetric >> grammaticalConsolidatedMetrics [
 
