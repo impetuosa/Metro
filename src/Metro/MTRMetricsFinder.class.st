@@ -180,6 +180,12 @@ MTRMetricsFinder >> visitTable: anAlcixTable [
 ]
 
 { #category : #visiting }
+MTRMetricsFinder >> visitTableField: anAlcixTableField [
+
+	self visitAttribute: anAlcixTableField
+]
+
+{ #category : #visiting }
 MTRMetricsFinder >> visitUserType: anAlcixUserType [ 
 	anAlcixUserType container accept: self 
 ]
