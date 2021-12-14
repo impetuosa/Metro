@@ -24,6 +24,12 @@ MTRStructuralMetric class >> cvsProperties [
 		sortedUsing: [ :x :y | (x argumentAt: 2) < (y argumentAt: 2) ]
 ]
 
+{ #category : #'instance creation' }
+MTRStructuralMetric >> astSize [
+
+	^ 0
+]
+
 { #category : #'as yet unclassified' }
 MTRStructuralMetric >> cleanLoading [
 	loading := nil
@@ -59,6 +65,11 @@ MTRStructuralMetric >> cvsProps [
 
 	^ self cvsProperties collect: [ :c | 
 		  c method valueWithReceiver: self arguments: {  } ]
+]
+
+{ #category : #'instance creation' }
+MTRStructuralMetric >> loc [
+	^ 0
 ]
 
 { #category : #'instance creation' }

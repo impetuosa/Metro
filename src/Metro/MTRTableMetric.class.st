@@ -4,6 +4,12 @@ Class {
 	#category : #'Metro-Model'
 }
 
+{ #category : #'as yet unclassified' }
+MTRTableMetric >> counters [
+
+	^ properties associations select: [ :a | a value isNumber ]
+]
+
 { #category : #properties }
 MTRTableMetric >> fields [
 	<cvs: #fields at: 2>

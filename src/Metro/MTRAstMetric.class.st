@@ -23,6 +23,12 @@ MTRAstMetric >> branchings [
 	^ self valueOrZero: #Branching
 ]
 
+{ #category : #'as yet unclassified' }
+MTRAstMetric >> counters [
+
+	^ properties associations select: [ :a | a value isNumber ]
+]
+
 { #category : #consolidation }
 MTRAstMetric >> cvs [
 	^ ';'

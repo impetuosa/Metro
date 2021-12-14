@@ -145,6 +145,18 @@ MTRProjectMetric >> metricsFor: anAlcixAccessModule [
 		  findMetricsFor: anAlcixAccessModule
 ]
 
+{ #category : #'as yet unclassified' }
+MTRProjectMetric >> moduleGeneralCounters [
+
+	| general |
+	general := Dictionary new.
+	general at: #Artefacts put: (self accessModules collect: [ :a | 
+			 a forms size + a reports size + a modules size
+			 + a classModules size + a tables size + a queries size ]) sum.
+		
+	^ general associations 
+]
+
 { #category : #consolidation }
 MTRProjectMetric >> modulesMetrics [
 

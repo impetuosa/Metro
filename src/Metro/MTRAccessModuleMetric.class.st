@@ -48,6 +48,21 @@ MTRAccessModuleMetric >> consolidatedGrammaticalRatios [
 		  compatible }
 ]
 
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> counters [
+
+	| counters loc |
+	counters := Dictionary new.
+	counters at: #Forms put: self forms size.
+	counters at: #Reports put: self reports size.
+	counters at: #Modules put: self modules size.
+	counters at: #Classes put: self classModules size.
+	counters at: #Tables put: self tables size.
+	counters at: #Queries put: self queries size.
+
+	^ counters associations 
+]
+
 { #category : #accessing }
 MTRAccessModuleMetric >> demographicMetrics [
 
@@ -140,6 +155,21 @@ MTRAccessModuleMetric >> macrosMetricsHeader [
 	^ self macros
 		  ifEmpty: [ '' ]
 		  ifNotEmpty: [ self macros anyOne columnsHeaders ]
+]
+
+{ #category : #'as yet unclassified' }
+MTRAccessModuleMetric >> moduleGeneralCounters [
+
+	| ast loc |
+	^ { 
+		  (#ASTSize
+		   ->
+			   ((children flatCollect: [ :c | c collect: #astSize ]) select: [ 
+				    :a | a isNumber ]) sum).
+		  (#LOC
+		   ->
+			   ((children flatCollect: [ :c | c collect: #loc ]) select: [ :a | 
+				    a isNumber ]) sum) }
 ]
 
 { #category : #accessing }

@@ -146,6 +146,11 @@ MTRSourcedEntity >> codeElementValue: aString [
 ]
 
 { #category : #'as yet unclassified' }
+MTRSourcedEntity >> counters [
+	^ properties associations select: [ : a | a value isNumber ]
+]
+
+{ #category : #'as yet unclassified' }
 MTRSourcedEntity >> cvsProps [
 
 	^ self cvsProperties collect: [ :c | 

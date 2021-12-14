@@ -4,6 +4,12 @@ Class {
 	#category : #'Metro-Model'
 }
 
+{ #category : #'as yet unclassified' }
+MTRQueryMetric >> counters [
+
+	^ properties associations select: [ :a | a value isNumber ]
+]
+
 { #category : #properties }
 MTRQueryMetric >> fields [
 	<cvs: #fields at: 2>
